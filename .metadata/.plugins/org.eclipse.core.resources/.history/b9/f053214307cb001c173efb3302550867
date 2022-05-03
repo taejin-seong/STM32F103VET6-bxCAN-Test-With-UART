@@ -1,0 +1,362 @@
+/*
+ * ap.c
+ *
+ *  Created on: Mar 14, 2021
+ *      Author: sungt
+ */
+
+#ifndef SRC_AP_AP_C_
+#define SRC_AP_AP_C_
+
+
+#include "ap.h"
+
+
+volatile 	uint8_t 				can_rx0_falg = 0; 	/* CAN RX 인터럽트 수신 플래그 */
+
+extern  	CAN_FilterTypeDef   	canFilter1;			/* Filter 설정을 위한 구조체 변수  */
+extern   	CAN_RxHeaderTypeDef 	canRxHeader;		/* 수신 받은 Data의 Header 정보가 저장될 구조체 변수, 임의로 변경하는 변수가 아님. */
+extern   	CAN_TxHeaderTypeDef 	canTxHeader;		/* 송신 하는 Data의 Header 정보가 저장될 구조체 변수, 직접 값을 지정하는 변수. */
+extern  	uint8_t 				canRx0Data[8];		/* 수신된 Data를 저장할 공간 	 */
+extern  	uint8_t					canTx0Data[8];		/* 송신할 Data를 저장할 공간 	 */
+extern   	uint32_t				TxMailBox;			/* STM32 bxCAN의 MailBox  */
+
+
+
+ void apInit(void)
+{
+	uartOpen(_DEF_UART1, 115200); //UART 개통
+}
+
+
+
+void apBoardLedTest(void)
+{
+
+  while(1)
+  {
+    ledToggle(_DEF_LED1);
+    delay_ms(100);
+
+    ledToggle(_DEF_LED2);
+    delay_ms(100);
+  }
+
+}
+
+
+void apUartTest(void)
+{
+  uartPrintf(_DEF_UART1, "UART BaudRate : %d\n", uartGetBaud(_DEF_UART1));
+
+  while(1)
+  {
+    if (uartAvailable(_DEF_UART1) > 0)
+    {
+
+      uartPrintf(_DEF_UART1, "Rx Data : %c , 0x%X\n", uartRead(_DEF_UART1));
+    }
+  }
+
+}
+
+/*
+ * @ scenario :
+ *
+ * #1. MCU1와  MCU2는 같은 CAN BUS라인에 연결되어 있음.
+ * #2. Standard CAN 2.0A 규격으로 MCU1과 MCU2가 CAN 통신을 수행.
+ *
+ * #3. MCU1는  0x100, 0x108, 0x104, 0x10C의 ID를 가지는 메세지로만  CAN 통신 (데이터의 송수신)이 가능.
+ * #4. MCU2는  0x100, 0x108의 ID를 가지는 메세지로만 CAN 통신(데이터의 송수신)이 가능.
+ *
+ * #5. MCU1과 MCU2는 각각  UART1과 PC의 터미널 프로그램과 연결되어 있음.
+ * #6. MCU1의 터미널 창의 'A','S','D','F'을 누를 때 마다 차례대로 0x100, 0x108, 0x104, 0x10C의 ID를 가지는 메세지를 MCU2에게 보냄.
+ * #7. MCU2는 터미널 창의 'A','S'를 누를 때 마다 차례대로 0x100, 0x108의 ID를 가지는 메세지를 MCU1에게 보냄.
+ *
+ * #8. MCU2는 MCU1의 0x104, 0x10C의 ID를 가지는 메세지를 송수신 할 수 없음.
+ * #9. MCU1은 MCU2가 보내는 모든 ID (0x100, 0x108)의 메세지를 송수신 할 수 있음.
+ *
+ * #10. 이를 실제 테스트를 통해 확인한다.
+ */
+
+
+/* CAN RX 인터럽트 함수 처리  */
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) //CAN RX의 FIFO0에 데이터가 수신이 되었을 때 걸리는 인터럽트 함수
+{
+  if (hcan->Instance == CAN1)	// CAN1을 사용한다면
+  {
+	// FIFO0에 받아진 데이터 (canRxHeadr) 정보를 사용자가 만든 수신공간인 canRx0Data에 받아오는 (저장하는) HAL_CAN_GetRxMessage 함수 호출.
+	if (HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &canRxHeader, &canRx0Data[0]) != HAL_OK) // HAL_CAN_GetRxMessage 함수호출에  문제가 있다면
+	{
+	  Error_Handler(); // 에러 핸들러 호출
+	}
+
+	else  // HAL_CAN_GetRxMessage 함수호출가 정상적으로 완료되었다면
+	{
+	  can_rx0_falg = 1; // can 수신 인터럽트 플래그 발생.
+	}
+
+  }
+}
+
+
+
+void apMCU1CanTest(void) // 마스터 모드로 작동함.
+{
+  /*
+   * Filter Mask ID 		: 0x7F3
+   * Filter ID 				: 0x10C
+   * 수신 가능한 메세지의 ID		: 0x100, 0x108, 0x104, 0x10C
+   * 송신 가능한 메세지의 ID 		: 0x100, 0x108, 0x104, 0x10C
+   */
+
+  char rx_data;
+
+  /* CAN Filter 설정 */
+							    /* 실제 ID 레지스터 부분이 상위 11bit에 할당이 되어있기 때문에 5bit를 왼쪽으로 쉬프트 시켜줘야함. */
+  canFilter1.FilterMaskIdHigh 	  = 0x7F3 << 5;				// Filter Mask ID를 0x7F3으로 설정.
+  canFilter1.FilterIdHigh 	  	  = 0x10C << 5;				// Filter ID를 0x10C으로 설정.
+
+								/* Filter 스케일을 16bit로 설정하였기 때문에 Filter ID와 Filter Mask ID의 High와 Low가 의미가 없고 별도의 필터 쌍이 하나더 생기게 됨.
+								      아래 설정을 통해 똑같은 기능의 Filter를 하나 더 추가. 사실 별의미 없는 문장이며 주석처리하여 실행해도 정상동작함. */
+  canFilter1.FilterMaskIdLow  	  = 0x7F3 << 5;				// Filter Mask ID를 0x7F3으로 설정.
+  canFilter1.FilterIdLow 	      = 0x10C << 5;				// Filter ID를 0x10C으로 설정.
+
+  canFilter1.FilterMode  	  	  = CAN_FILTERMODE_IDMASK;	// Filter 모드를 Filter ID Mask 모드로 설정.
+  canFilter1.FilterScale		  = CAN_FILTERSCALE_16BIT;	// Filter 스케일을 16bit로 설정.
+  canFilter1.FilterFIFOAssignment = CAN_FILTER_FIFO0;		// 두 개의 FIFO 중 FIFO0을 사용.
+  canFilter1.FilterBank 		  = 0;						// 114행 ~125행 까지의 Filter 정보를 Filter Bank 0번에 저장. (Bank 1번은 또 다른 Filter 정보로 설정할 수 있음.)
+  canFilter1.FilterActivation	  = ENABLE;					// CAN 통신에서 Filter를 사용하도록 ENABLE 설정.
+
+  HAL_CAN_ConfigFilter(&hcan, &canFilter1);							// 위에서 설정한 Filter 정보를  적용시킴.
+
+  /* CAN RX 인터럽트 감지 설정 */
+  HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING); // Filter를 거처서 데이터가 수신이 되면 FIFO0에 저장이 되는데, 이 때 인터럽트가 걸리도록 설정하는 HAL_CAN_ActivateNotification 함수호출.
+																	// FIFO0에 메세지가 Pending된 메세지가 있는지(수신되어서 처리를 대기하는 것이 있는지) 만약 있다면 인터럽트를 발생시킴.
+  /* CAN 통신 시작  */
+  HAL_CAN_Start(&hcan);	// CAN 통신을 시작하는 함수호출
+
+  uartPrintf(_DEF_UART1, "\n");
+  uartPrintf(_DEF_UART1, " ________________________________________ \n");
+  uartPrintf(_DEF_UART1, "|                                        |\n");
+  uartPrintf(_DEF_UART1, "|           MCU1 CAN Available           |\n");
+  uartPrintf(_DEF_UART1, "|________________________________________|\n");
+  uartPrintf(_DEF_UART1, "| Option |       |       |       |       |\n");
+  uartPrintf(_DEF_UART1, "| values |   A   |   S   |   D   |   F   |\n");
+  uartPrintf(_DEF_UART1, "|________|_______|_______|_______|_______|\n");
+  uartPrintf(_DEF_UART1, "|   ID   |       |       |       |       |\n");
+  uartPrintf(_DEF_UART1, "| values | 0x100 | 0x108 | 0x104 | 0x10C |\n");
+  uartPrintf(_DEF_UART1, "|________|_______|_______|_______|_______|\n");
+  uartPrintf(_DEF_UART1, "\n\n");
+
+  while (1)
+  {
+
+	if (can_rx0_falg == 1) // can 수신 인터럽트가 발생하였다면
+	{
+	  uartPrintf(_DEF_UART1, " ________________________________________ \n");
+	  uartPrintf(_DEF_UART1, "|                                        |\n");
+	  uartPrintf(_DEF_UART1, "|   ID and Data Received from MCU2.      |\n");
+	  uartPrintf(_DEF_UART1, "|________________________________________|\n");
+	  uartPrintf(_DEF_UART1, "\n");
+	  uartPrintf(_DEF_UART1, "Rx ID   : 0x%3X\n", canRxHeader.StdId); // Filter를 거쳐 수신된 메세지의 ID를 UART로 터미널창에 출력.
+	  uartPrintf(_DEF_UART1, "Rx Data : %d\n", canRx0Data[0]);		  // Filter를 거쳐 수신된 메세지의 Data를 UART로 터미널창에 출력.
+	  uartPrintf(_DEF_UART1, "\n");
+
+	  can_rx0_falg = 0;
+	}
+
+
+	if (uartAvailable(_DEF_UART1) > 0)
+	{
+	  rx_data = uartRead(_DEF_UART1);
+	  uartPrintf(_DEF_UART1,"Option : %c\n", rx_data);
+
+	  switch(rx_data)
+	  {
+		case 'A':
+		  /* CAN Tx Header 설정  */
+		  canTxHeader.StdId = 0x100;		// 0x100을 Standard ID로 설정.
+		  canTxHeader.RTR = CAN_RTR_DATA;	// Data Frame을 전송하기로 설정.
+		  canTxHeader.IDE = CAN_ID_STD;		// ID를 Standard (11bit)로 설정.
+		  canTxHeader.DLC = 8;				// Data Field의 길이를 8byte로 설정.
+
+		  /* CAN Tx Data Field 설정  */
+		  for (int i = 0; i < 8; i++)		// Data를 전송할 때 마다 Data 값을 1 씩 증가시킴.
+		  {									// CAN 통신으로 전송할 데이터 설정.
+			canTx0Data[i]++;
+		  }
+
+		  /* CAN Tx 전송 처리  */
+		  TxMailBox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);						// STM32 bxCAN의  MailBox는 3개가 있고  비워져있는 MailBox에 메세지를 채워넣으면 Data를 전송 할 수 있는 상태가 됨.
+																					// 이를 위해 MailBox 3개 중 어떤 MailBox가 비워져있는지 찾는 함수가  HAL_CAN_GetTxMailboxesFreeLevel, 반환 값으로  MailBox 번호가 반환됨.
+																					// 이를 TxMailBox 변수에 저장.
+
+		  HAL_CAN_AddTxMessage(&hcan, &canTxHeader, &canTx0Data[0], &TxMailBox);	// MailBox에 있는  Data를 실제 전송하는 HAL_CAN_AddTxMessage 함수호출
+
+		  break;
+
+
+		case 'S':
+		  canTxHeader.StdId = 0x108;
+		  canTxHeader.RTR = CAN_RTR_DATA;
+		  canTxHeader.IDE = CAN_ID_STD;
+		  canTxHeader.DLC = 8;
+
+		  for (int i = 0; i < 8; i++)
+		  {
+			canTx0Data[i]++;
+		  }
+
+		  TxMailBox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);
+		  HAL_CAN_AddTxMessage(&hcan, &canTxHeader, &canTx0Data[0], &TxMailBox);
+		  break;
+
+
+		case 'D':
+		  canTxHeader.StdId = 0x104;
+		  canTxHeader.RTR = CAN_RTR_DATA;
+		  canTxHeader.IDE = CAN_ID_STD;
+		  canTxHeader.DLC = 8;
+
+		  for (int i = 0; i < 8; i++)
+		  {
+			canTx0Data[i]++;
+		  }
+
+		  TxMailBox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);
+		  HAL_CAN_AddTxMessage(&hcan, &canTxHeader, &canTx0Data[0], &TxMailBox);
+		  break;
+
+
+		case 'F':
+		  canTxHeader.StdId = 0x10C;
+		  canTxHeader.RTR = CAN_RTR_DATA;
+		  canTxHeader.IDE = CAN_ID_STD;
+		  canTxHeader.DLC = 8;
+
+		  for (int i = 0; i < 8; i++)
+		  {
+			canTx0Data[i]++;
+		  }
+
+		  TxMailBox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);
+		  HAL_CAN_AddTxMessage(&hcan, &canTxHeader, &canTx0Data[0], &TxMailBox);
+		  break;
+
+
+		default:
+		  break;
+	  }
+
+	}
+  }
+}
+
+
+void apMCU2CanTest(void) // 마스터 모드로 작동함.
+{
+  /*
+   * Filter Mask ID 		: 0x7F6
+   * Filter ID 				: 0x108
+   * 수신 가능한 메세지의 ID		: 0x100, 0x108
+   * 송신 가능한 메세지의 ID		: 0x100, 0x108
+   */
+
+  char rx_data;
+
+
+  canFilter1.FilterMaskIdHigh 	  = 0x7F6 << 5;
+  canFilter1.FilterIdHigh 	  	  = 0x108 << 5;
+  canFilter1.FilterMaskIdLow  	  = 0x7F6 << 5;
+  canFilter1.FilterIdLow 	      = 0x108 << 5;
+  canFilter1.FilterMode  	  	  = CAN_FILTERMODE_IDMASK;
+  canFilter1.FilterScale		  = CAN_FILTERSCALE_16BIT;
+  canFilter1.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+  canFilter1.FilterBank 		  = 0;
+  canFilter1.FilterActivation	  = ENABLE;
+
+  HAL_CAN_ConfigFilter(&hcan, &canFilter1);
+  HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+
+  HAL_CAN_Start(&hcan);
+
+  uartPrintf(_DEF_UART1, "\n\n");
+  uartPrintf(_DEF_UART1, " ________________________ \n");
+  uartPrintf(_DEF_UART1, "|                        |\n");
+  uartPrintf(_DEF_UART1, "|   MCU2 CAN Available   |\n");
+  uartPrintf(_DEF_UART1, "|________________________|\n");
+  uartPrintf(_DEF_UART1, "| Option |       |       |\n");
+  uartPrintf(_DEF_UART1, "| values |   A   |   S   |\n");
+  uartPrintf(_DEF_UART1, "|________|_______|_______|\n");
+  uartPrintf(_DEF_UART1, "|   ID   |       |       |\n");
+  uartPrintf(_DEF_UART1, "| values | 0x100 | 0x108 |\n");
+  uartPrintf(_DEF_UART1, "|________|_______|_______|\n");
+  uartPrintf(_DEF_UART1, "\n\n");
+
+
+  while (1)
+  {
+
+	if (can_rx0_falg == 1)
+	{
+	  uartPrintf(_DEF_UART1, " ________________________________________ \n");
+	  uartPrintf(_DEF_UART1, "|                                        |\n");
+	  uartPrintf(_DEF_UART1, "|   ID and Data Received from MCU1.      |\n");
+	  uartPrintf(_DEF_UART1, "|________________________________________|\n");
+	  uartPrintf(_DEF_UART1, "\n");
+	  uartPrintf(_DEF_UART1, "Rx ID   : 0x%3X\n", canRxHeader.StdId);
+	  uartPrintf(_DEF_UART1, "Rx Data : %d\n", canRx0Data[0]);
+	  uartPrintf(_DEF_UART1, "\n");
+
+	  can_rx0_falg = 0;
+	}
+
+
+	if (uartAvailable(_DEF_UART1) > 0)
+	{
+	  rx_data = uartRead(_DEF_UART1);
+	  uartPrintf(_DEF_UART1,"Option : %c\n", rx_data);
+
+	  switch(rx_data)
+	  {
+		case 'A':
+		  canTxHeader.StdId = 0x100;
+		  canTxHeader.RTR = CAN_RTR_DATA;
+		  canTxHeader.IDE = CAN_ID_STD;
+		  canTxHeader.DLC = 8;
+
+		  for (int i = 0; i < 8; i++)
+		  {
+			canTx0Data[i]++;
+		  }
+
+		  TxMailBox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);
+		  HAL_CAN_AddTxMessage(&hcan, &canTxHeader, &canTx0Data[0], &TxMailBox);
+		  break;
+
+
+		case 'S':
+		  canTxHeader.StdId = 0x108;
+		  canTxHeader.RTR = CAN_RTR_DATA;
+		  canTxHeader.IDE = CAN_ID_STD;
+		  canTxHeader.DLC = 8;
+
+		  for (int i = 0; i < 8; i++)
+		  {
+			canTx0Data[i]++;
+		  }
+
+		  TxMailBox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);
+		  HAL_CAN_AddTxMessage(&hcan, &canTxHeader, &canTx0Data[0], &TxMailBox);
+		  break;
+
+
+		default:
+		  break;
+	  }
+	}
+  }
+}
+
+#endif /* SRC_AP_AP_C_ */
