@@ -100,7 +100,7 @@ typedef struct
   * @brief  CAN filter configuration structure definition
   *******************************************************************************************************************************
   *
-  * TODO CAN_FilterTypeDef 구조체 멤버 참고
+  * TODO CAN_FilterTypeDef 구조체 멤버 설명/참고
   * @member
   *	        FilterIdHigh : FilterScale을 32bit로 사용한다면 16bit씩 쪼개서 Filter ID가 설정됨. 32bit의 Filter ID 중 상위 16bit Filter ID를 여기에 설정.
   *                        FilterScale을 16bit로 사용한다면 FilterIdHigh와 FilterIdLow는 각각 따로 동작함. 즉, FilterIdHigh와 FilterMaskIdHigh가 하나의 쌍이 되고
@@ -188,7 +188,7 @@ typedef struct
   * @brief  CAN Tx message header structure definition
   *******************************************************************************************************************************
   *
-  * TODO CAN_TxHeaderTypeDef 구조체 멤버 참고
+  * TODO CAN_TxHeaderTypeDef 구조체 멤버 설명/참고
   * @member
   *               StdId : 11bit ID (Standard ID) 설정.
   *
@@ -237,7 +237,7 @@ typedef struct
   * @brief  CAN Rx message header structure definition
   *******************************************************************************************************************************
   *
-  * TODO CAN_RxHeaderTypeDef 구조체 멤버 참고
+  * TODO CAN_RxHeaderTypeDef 구조체 멤버 설명/참고
   * @member
   *
   *******************************************************************************************************************************
