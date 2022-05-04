@@ -5,10 +5,12 @@
 STM32 Connectivity Line을 제외한 F1 시리즈 STM32들은 데이터 송수신에 사용되는 512Byte RAM을 USB와 CAN이 공유하기 때문에 **USB와 CAN을 동시에 사용하지 못합니다.**
 CAN과 USB를 동시에 사용해야 한다면 STM32F105/7이나 F2 시리즈 등 다른 시리즈의 STM32를 사용하시길 바랍니다. <br>
 
-**CAN 통신에 대하여 이해가 부족하신 분이라면 아래의 사이트를 참고하세요.** <br>
+해당 프로젝트는 CAN 통신에 대한 **기본적인 이해**와 CAN 통신을 위한 **기본적인 설정법**에 대한 학습이 필요합니다. <br>
+아래 사이트를 참고하여 학습하는 것을 추천합니다.
 
-* 맨위의 동영상은 **8bit AVR MCU** 기준의 CAN 통신을 위한 레지스터 설정법을 설명해 준다면, **32bit STM32 MCU**를 사용한 CAN 설정법의 경우에는 아래 두 사이트 및 영상을 참고하세요.. 
+<br>
 
+CAN/CAN-FD 통신의 이론적 소개와 8bit AVR MCU에서의 CAN 통신을 위한 레지스터 설정법을 다뤄줍니다.
 * **Microchip Technology - Korean** YouTube 
   + [CAN/CAN-FD Basic Part 1: CAN 개요 및 프로토콜 1](https://www.youtube.com/watch?v=9A3YRYla4WI) 
   + [CAN/CAN-FD Basic Part 2: CAN 프로토콜 2](https://www.youtube.com/watch?v=dqacvllM-UA) 
@@ -16,11 +18,17 @@ CAN과 USB를 동시에 사용해야 한다면 STM32F105/7이나 F2 시리즈 �
   + [CAN/CAN-FD Basic Part 4: CAN과 CAN FD](https://www.youtube.com/watch?v=IeK2TSGX5ms) 
   + [CAN/CAN-FD Basic Part 5: 실습 설명](https://www.youtube.com/watch?v=rg2LA0o98dM) 
 
-* **Wonyeob Chris Park** YouTube   
+<br>
+
+CAN 통신의 이론적 소개와 32bit STM32F4 MCU에서의 CAN 통신을 위한 설정법을 다뤄줍니다.
+* **Wonyeob Chris Park** YouTube
   + [[HAL, CubeMX, TrueSTUDIO를 이용한 STM32F4 속성 강의 강좌] 13-1강. CAN 통신 개념](https://www.youtube.com/watch?v=84IAJDuJdxc&list=PLUaCOzp6U-RqMo-QEJQOkVOl1Us8BNgXk&index=21)
   + [[HAL, CubeMX, TrueSTUDIO를 이용한 STM32F4 속성 강의 강좌] 13-2강. CAN 설정 및 송신코드 작성](https://www.youtube.com/watch?v=6vR3lX8ojDA&list=PLUaCOzp6U-RqMo-QEJQOkVOl1Us8BNgXk&index=22)
   + [[HAL, CubeMX, TrueSTUDIO를 이용한 STM32F4 속성 강의 강좌] 13-3강. CAN 필터 MASK ID 설정 및 수신코드 작성 (완)](https://www.youtube.com/watch?v=T65WpTyv8Po&list=PLUaCOzp6U-RqMo-QEJQOkVOl1Us8BNgXk&index=23)
- 
+
+<br>
+
+CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한 레지스터 설정법을 다뤄줍니다.
 * **Joon-Lab 기술블로그**
   + [STM32를 이용해 Control Area Network (CAN) 통신 이해 - 목차](https://blog.joon-lab.com/23)
 
@@ -56,5 +64,5 @@ CAN과 USB를 동시에 사용해야 한다면 STM32F105/7이나 F2 시리즈 �
 <br>
 
 <p align="center">
-   <img src="https://user-images.githubusercontent.com/70312248/166732951-cdbe8fca-a147-4d3d-b427-3d4a221e06c7.png" width="970" height="505"/>  
+   <img src="https://user-images.githubusercontent.com/70312248/166735362-78d41cc9-3958-492e-bc68-59fc030e5554.png" width="970" height="505"/>  
 </p>  
