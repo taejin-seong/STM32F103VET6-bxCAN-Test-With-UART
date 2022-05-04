@@ -56,5 +56,5 @@ CAN과 USB를 동시에 사용해야 한다면 STM32F105/7이나 F2 시리즈 �
 <br>
 
 <p align="center">
-   <img src="https://user-images.githubusercontent.com/70312248/166689921-8942e3f5-cbc7-4579-b37d-1329d7883a4e.png" width="1300" height="530"/>  
+   <img src="https://user-images.githubusercontent.com/70312248/166732951-cdbe8fca-a147-4d3d-b427-3d4a221e06c7.png" width="970" height="505"/>  
 </p>  
