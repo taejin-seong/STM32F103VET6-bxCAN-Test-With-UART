@@ -2,7 +2,7 @@
 
 본 프로젝트에서는 STM32의 내장되어있는 **bxCAN**을 사용하여 두 개의 MCU 간 CAN 통신을 주고 받는 **송수신 테스트**를 진행하였으며 이를 PC 터미널 창에 띄어서 확인해보는 과정을 나타냅니다. <br>
 
-STM32 Connectivity Line을 제외한 F1 시리즈 STM32들은 데이터 송수신에 사용되는 512Byte RAM을 USB와 CAN이 공유하기 때문에 **USB와 CAN을 동시에 사용하지 못합니다.**
+STM32 Connectivity Line을 제외한 F1 시리즈 STM32들은 데이터 송수신에 사용되는 512byte RAM을 USB와 CAN이 공유하기 때문에 **USB와 CAN을 동시에 사용하지 못합니다.**
 CAN과 USB를 동시에 사용해야 한다면 STM32F105/7이나 F2 시리즈 등 다른 시리즈의 STM32를 사용하시길 바랍니다. <br>
 
 해당 프로젝트는 CAN 통신에 대한 **기본적인 이해**와 CAN 통신을 위한 **기본적인 설정법**에 대한 학습이 필요합니다. <br>
@@ -66,3 +66,13 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 <p align="center">
    <img src="https://user-images.githubusercontent.com/70312248/166743059-04822ac5-791a-4a33-974b-0aa26f9950d1.png" width="850" height="445"/>  
 </p>  
+
+<br>
+
+### Baud Rate 설정
+
+<br>
+
+### Filter Mask ID와 Filter ID 설정
+
+<br>
