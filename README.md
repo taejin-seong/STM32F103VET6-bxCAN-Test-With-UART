@@ -1,5 +1,5 @@
 
-본 프로젝트에서는 STM32의 내장되어있는 **bxCAN**을 사용하여 두 개의 MCU 간 CAN 통신을 주고 받는 **송수신 테스트**를 진행하였으며 이를 PC 터미널 창에 띄어서 확인해보는 과정을 나타냅니다. 
+본 프로젝트에서는 STM32의 내장되어있는 **bxCAN**을 사용하여 두 개의 STM32F103VET6 MCU 간 CAN 통신을 주고 받는 **송수신 테스트**를 진행하였으며 이를 PC 터미널 창에 띄어서 확인해보는 과정을 나타냅니다. 
 
 <br>
 
@@ -66,15 +66,22 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
  <br>
 
 ## 하드웨어 구성<br>
-### 구성도
-
 <br>
 
 <p align="center">
    <img src="https://user-images.githubusercontent.com/70312248/166743059-04822ac5-791a-4a33-974b-0aa26f9950d1.png" width="850" height="445"/>  
-</p>  
+</p> 
 
-<br>
+<br><br>
+
+<p align="center">
+   <img src="https://user-images.githubusercontent.com/70312248/166893002-3b6dc7fd-1c3b-4f1f-85a4-6257ed2a22a8.png" width="740" height="280"/>  
+</p> 
+
+
+<br><br>
+
+## bxCAN 설정<br>
 
 ### Baud Rate 설정
 
