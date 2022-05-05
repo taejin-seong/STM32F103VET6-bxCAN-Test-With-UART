@@ -17,8 +17,8 @@
 
 <br>
 
-CAN/CAN-FD 통신의 이론적 소개와 8bit AVR MCU에서의 CAN 통신을 위한 레지스터 설정법을 다뤄줍니다.
-* **Microchip Technology - Korean** YouTube 
+CAN/CAN-FD 통신의 자세한 이론적 소개와 8bit AVR MCU에서의 CAN 통신을 위한 레지스터 설정법을 다뤄줍니다. [이론부분 매우 추천]
+* **Microchip Technology - Korean** YouTube
   + [CAN/CAN-FD Basic Part 1: CAN 개요 및 프로토콜 1](https://www.youtube.com/watch?v=9A3YRYla4WI) 
   + [CAN/CAN-FD Basic Part 2: CAN 프로토콜 2](https://www.youtube.com/watch?v=dqacvllM-UA) 
   + [CAN/CAN-FD Basic Part 3: CAN 에러 핸들링과 비트 타이밍 설정](https://www.youtube.com/watch?v=zyzz_3KW9GY) 
@@ -94,7 +94,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 * Baud Rate는 초당 500k bit이므로 1bit 당 2us가 소요.
 * STM32F103VET6의 CAN은 **APB1** 페리페럴 클럭 버스에 달려있음. 
 * **APB1**이 **36MHz** 일 때, 이에 따라 **Prescaler를 9** 로 설정함. 즉, 9/36MHz = **0.25us**.
-* **0.25us** 단위가 **1개의 타임퀀텀(TQ : Time Quantum (plural: quanta)) 시간 단위**가 됨.
+* **0.25us** 단위가 **1개의 타임퀀텀(TQ : Time Quantum (plural: Quanta)) 시간 단위**가 됨.
 
 
 ### (2). 1 Bit Time에 TQ를 몇 개 배치할 것인가?
@@ -111,17 +111,41 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
    + *Sample Point = (SYNC_SEG + BS1) / Total TQ*  
 * 따라서 위의 공식을 이용하면 **75/100 = (1 + BS1) / 8** 이므로 이를 **BS1**에 대하여 풀면 **BS1=5**, 저절로 **BS2=2**
 * 그러므로 **SYNC_SEG = 1**, **BS1 = 5**, **BS = 2**의 TQ를 배정받게 됨.
-* 여기까지 TQ 배치에 따른 Sample Point가 결정되고, 1 Bit Time이 완성됨.
+* 이와 함께 **STW (Re-Synchroniztion Jump Width)** 는 **1**로 설정
+* 여기까지 TQ 배치에 따른 Sample Point가 결정되고 1 Bit Time이 완성됨.
 
+### (4). 사이트를 이용하여 쉽게 계산하기
+ * http://www.bittiming.can-wiki.info/
 <br>
 <br>
 
 <p align="center">
-   <img src="https://user-images.githubusercontent.com/70312248/166937586-d398acdc-11ee-4f66-9799-63b83e7478b0.png" width="550" height="360"/>  
+   <img src="https://user-images.githubusercontent.com/70312248/166937586-d398acdc-11ee-4f66-9799-63b83e7478b0.png" width="550" height="330"/>  
 </p> 
 
 <br>
 
 ### Filter Mask ID와 Filter ID 설정
+* STM32F103VET6의 **bxCAN (Basic Extended CAN)** 은 **CAN의 2.0A와 B** 둘 다 지원함. 
+   +  즉, CAN 2.0B 버전이므로 하위호환 때문에 2.0A도 지원이 가능. 
+* 본 프로젝트에서는 **11 bit Standard ID**, **16 bit Filter Scale**, **Filter ID Mask 모드**를 사용함. 
+
+### (1). MCU 1의 Filter Mask ID와 Filter ID 
+
+<br>
+
+<p align="left">
+   <img src="https://user-images.githubusercontent.com/70312248/166976860-a2993d21-f1c0-4b57-a7e3-d1b2cdb9a074.png" width="707" height="350"/>  
+</p> 
+<br>
+
+### (2). MCU 2의 Filter Mask ID와 Filter ID 
+
+<br>
+
+<p align="left">
+   <img src="https://user-images.githubusercontent.com/70312248/166976871-f270bbc1-7ccc-4022-a9aa-2ce04bffc6a8.png" width="707" height="290"/>  
+</p> 
+<br>
 
 <br>
