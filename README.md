@@ -79,12 +79,39 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 </p> 
 
 
-<br><br>
+<br>
+<br>
+
+
 
 ## bxCAN 설정<br>
 
 ### Baud Rate 설정
+* CAN 통신의 Baud Rate를 설정할 때는 **1 bit를 전송하는데 걸리는 시간**을 설정해야함.
+* **Baud Rate = 500kbps** 으로 설정하기 위한 과정 
 
+### (1). Prescaler 설정
+* Baud Rate는 초당 500k bit이므로 1bit 당 2us가 소요.
+* STM32F103VET6의 CAN은 **APB1** 페리페럴 클럭 버스에 달려있음. 
+* **APB1**이 **36MHz** 일 때, 이에 따라 **Prescaler를 9** 로 설정함. 즉, 9/36MHz = **0.25us**.
+* **0.25us** 단위가 **1개의 타임퀀텀(TQ) 시간 단위**가 됨.
+
+
+### (2). 1 Bit Time에 TQ를 몇 개 배치할 것인가?
+* 1 Bit Time에 **8개**의 TQ를 배치하면 0.25us x 8 = **2us**가 됨.
+* 즉, 1 Bit Time에 8개의 TQ를 배치하도록 설정함.
+* 여기까지 통신속도 500kbps가 결정됨.
+
+
+### (3). 1 Bit Time에 TQ를 어떻게 배치할 것인가?
+* 8개의 TQ를 **SYNC_SEG**, **BIT SEGMENT 1 (BS1)**, **BIT SEGMENT 2 (BS2)** 에 각각 나눠서 배정.
+* **SYNC_SEG**는 **1TQ**로 고정.
+* 나머지 **7개의 TQ**를 **BS1**과 **BS2**에 각각 배정해야함. 
+* 먼저 **SAMPLE POINT**를 **75%로** 만들기로 결정하고, **SAMPLE POINT**는 다음과 같은 공식으로 정해짐.
+   + *Sample Point = (SYNC_SEG + BS1) / Total TQ*  
+* 따라서 위의 공식을 이용하면 **75/100 = (1 + BS1) / 8** 이므로 이를 **BS1**에 대하여 풀면 **BS1=5**, 저절로 **BS2=2**
+* 그러므로 **SYNC_SEG = 1**, **BS1 = 5**, **BS = 2**의 TQ를 배정받게 됨.
+* 여기까지 TQ 배치에 따른 Sample Point가 결정되고, 1 Bit Time이 완성됨.
 <br>
 
 ### Filter Mask ID와 Filter ID 설정
