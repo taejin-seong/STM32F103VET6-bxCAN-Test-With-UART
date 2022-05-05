@@ -94,7 +94,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 * Baud Rate는 초당 500k bit이므로 1bit 당 2us가 소요.
 * STM32F103VET6의 CAN은 **APB1** 페리페럴 클럭 버스에 달려있음. 
 * **APB1**이 **36MHz** 일 때, 이에 따라 **Prescaler를 9** 로 설정함. 즉, 9/36MHz = **0.25us**.
-* **0.25us** 단위가 **1개의 타임퀀텀(TQ) 시간 단위**가 됨.
+* **0.25us** 단위가 **1개의 타임퀀텀(TQ : Time Quantum (plural: quanta)) 시간 단위**가 됨.
 
 
 ### (2). 1 Bit Time에 TQ를 몇 개 배치할 것인가?
@@ -112,6 +112,14 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 * 따라서 위의 공식을 이용하면 **75/100 = (1 + BS1) / 8** 이므로 이를 **BS1**에 대하여 풀면 **BS1=5**, 저절로 **BS2=2**
 * 그러므로 **SYNC_SEG = 1**, **BS1 = 5**, **BS = 2**의 TQ를 배정받게 됨.
 * 여기까지 TQ 배치에 따른 Sample Point가 결정되고, 1 Bit Time이 완성됨.
+
+<br>
+<br>
+
+<p align="center">
+   <img src="https://user-images.githubusercontent.com/70312248/166937586-d398acdc-11ee-4f66-9799-63b83e7478b0.png" width="550" height="360"/>  
+</p> 
+
 <br>
 
 ### Filter Mask ID와 Filter ID 설정
