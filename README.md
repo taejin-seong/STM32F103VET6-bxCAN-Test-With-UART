@@ -238,7 +238,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 <details>
 <summary>📌</summary><br>  
 <div markdown="1">
-<img src="https://user-images.githubusercontent.com/70312248/167076207-b753554a-bc87-472f-9673-01ba80b7d8b3.png" width="1000" height="800"/> 
+<img src="https://user-images.githubusercontent.com/70312248/167100679-554e0429-1d0b-462a-8cb1-89b2a75930bb.png" width="1000" height="800"/> 
 <br><br>
 </div>
 </details>
