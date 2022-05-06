@@ -287,19 +287,30 @@ int main(void)
 
 
 ## 테스트 결과
-### 터미널창 초기화면
+### (1). 터미널창 초기화면
 <br>
 <p align="center">
 <img src="https://user-images.githubusercontent.com/70312248/167086678-22a5996d-9f6b-42c8-9650-b74fcf6a210b.png" width="1091" height="350"/>
 </p>
 <br>
 
-### MCU 1에서 MCU 2로 해당 ID의 데이터를 송신하는 경우
+### (2). MCU 1에서 MCU 2로 해당 ID의 데이터를 송신하는 경우
+* Filter 설정으로 인해 MCU 2에서는 **0x104, 0x10C** ID를 가지는 메세지를 수신하지 않고 **0x100**, **0x108** ID를 가지는 메세지만 수신함.
 <br>
 <p align="center">
-<img src="https://user-images.githubusercontent.com/70312248/167087832-bb9ade48-d821-4376-b623-162156ba1c09.png" width="1091" height="700"/>
+<img src="https://user-images.githubusercontent.com/70312248/167088880-3c5438b0-95bc-45ad-8328-52a8395f441b.png" width="1091" height="650"/>
 </p>
 <br>
+
+### (3). MCU 2에서 MCU 1으로 해당 ID의 데이터를 송신하는 경우
+* MCU 1에서는 MCU 2가 가질 수 있는 **0x100, 0x108** ID의 메세지를 모두 수신할 수 있음.
+<br>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/70312248/167089510-093c329d-7ba5-4991-9977-43c6091d8f85.png" width="1091" height="650"/>
+</p>
+<br>
+
+
 
 ## 참고 <br>
 프로젝트를 빌드할 때는 다음 경로에 있는 폴더를 빌드 및 디버그 항목에서 **제외**해야 정상적으로 프로젝트가 빌드됩니다. <br>
