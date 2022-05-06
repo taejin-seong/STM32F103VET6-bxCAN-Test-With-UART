@@ -75,7 +75,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 <br><br>
 
 <p align="center">
-   <img src="https://user-images.githubusercontent.com/70312248/166893002-3b6dc7fd-1c3b-4f1f-85a4-6257ed2a22a8.png" width="740" height="280"/>  
+   <img src="https://user-images.githubusercontent.com/70312248/167097424-0e7bdff0-ce37-4180-8acc-55e05a60330b.png" width="740" height="280"/>  
 </p> 
 
 
@@ -322,7 +322,7 @@ int main(void)
 
 * Data Frame 포멧
 <p align="center">
-<img src="https://user-images.githubusercontent.com/70312248/167095898-7994c2cd-fa79-4b58-9eb6-bf3f1029f261.png" width="1440" height="230"/>
+<img src="https://user-images.githubusercontent.com/70312248/167095898-7994c2cd-fa79-4b58-9eb6-bf3f1029f261.png" width="1440" height="210"/>
 </p>
 
 
