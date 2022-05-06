@@ -314,9 +314,18 @@ int main(void)
 * Data Field는 **8 byte**로 설정됨.
 * 마지막 7 bits는 **Error Frame** 의미.
 <br>
+
 <p align="center">
 <img src="https://user-images.githubusercontent.com/70312248/167090493-c04b4696-7e68-4668-9ece-b05c8c706835.png" width="1540" height="150"/>
 </p>
+
+
+* Data Frame 포멧
+<p align="center">
+<img src="https://user-images.githubusercontent.com/70312248/167095898-7994c2cd-fa79-4b58-9eb6-bf3f1029f261.png" width="1440" height="230"/>
+</p>
+
+
 <br>
 
 ## 참고 <br>
