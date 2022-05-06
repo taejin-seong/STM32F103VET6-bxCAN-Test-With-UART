@@ -310,7 +310,14 @@ int main(void)
 </p>
 <br>
 
-
+### (4). 0x100 Std ID로 데이터 1을 보냈을 때의 CAN 메세지의 Data Frame 파형 측정
+* Data Field느 **8 byte**로 설정됨.
+* 마지막 7 bits는 **Error Frame** 의미.
+<br>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/70312248/167090493-c04b4696-7e68-4668-9ece-b05c8c706835.png" width="1540" height="150"/>
+</p>
+<br>
 
 ## 참고 <br>
 프로젝트를 빌드할 때는 다음 경로에 있는 폴더를 빌드 및 디버그 항목에서 **제외**해야 정상적으로 프로젝트가 빌드됩니다. <br>
