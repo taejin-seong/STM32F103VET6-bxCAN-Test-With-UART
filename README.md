@@ -247,10 +247,67 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 
 
 ## 테스트 파일
+### 구성 및 경로
+* 기본적으로 구현한 테스트 함수는 다음과 같습니다 <br>
+
+  + stm32f103vet6_fsmc_can_test → src → ap → ap.c → <b>void apMCU1CanTest(void){...} </b><br>
+  + stm32f103vet6_fsmc_can_test → src → ap → ap.c → <b>void apMCU2CanTest(void){...} </b><br>
+
+* `apMCU1CanTest()` 함수와 `apMCU2CanTes()` 함수를 각각 다른 타겟 MCU에 다운로드하여 CAN 통신을 테스트 해볼 수 있습니다.
+* `ap.c` 함수에서 제공하는 테스트 외에 다양한 테스트 케이스를 응용하여 구현할 수 있습니다.<br>
+
 <br>
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/70312248/167077320-fc41ddf7-25d1-4dfd-aa0e-09f25bff1c65.png" width="345" height="650"/>
+</p>
+  <br>
+  
+### 실행 방법 <br>
+
+* 기본 테스트 함수를 빌드하고 실행시키기 위해서는 `stm32f103vet6_fsmc_can_test → src → main.c`에서 빌드 시킬 테스트 함수의 주석을 해제해야합니다.
+
+```C
+#include "main.h"
+
+int main(void)
+{
+   hwInit();
+   apInit();
+   
+// apBoardLedTest();
+// apUartTest();
+   apMCU1CanTest(); //0x7F3
+// apMCU2CanTest(); //0x7F6
+   
+   return 0;
+}
+```
+<br>
+
 
 ## 테스트 결과
 <br>
 
-## 참고 
+## 참고 <br>
+프로젝트를 빌드할 때는 다음 경로에 있는 폴더를 빌드 및 디버그 항목에서 **제외**해야 정상적으로 프로젝트가 빌드됩니다. <br>
+* **`stm32f411ceu6_fw_module → src → lib → Core`**
+
+#### How to exclude
+<details>
+  <summary>:pushpin:</summary><br>
+<div markdown="1">
+  • Core 폴더를 클릭하고 다음 단계를 진행합니다. <br><br>
+  <img src="https://user-images.githubusercontent.com/70312248/166666504-b65bb2b8-3d73-4d9b-8022-54a35c26f02e.png" width="440" height="550"/> 
+ 　　　
+<img src="https://user-images.githubusercontent.com/70312248/166665088-0c16c066-1b22-406a-b485-4e3af1d21884.png" width="310" height="450"/> 
+<br><br>
+<br><br>
+  
+• 최종적으로 아래와 같은 폴더 상태가 됩니다. <br><br>
+<img src="https://user-images.githubusercontent.com/70312248/166665097-75e0de2d-5408-4d7c-8544-dc5f011807af.png" width="100" height="30"/> 
+<br><br><br>
+  
+</div>		
+</details>
 <br>
