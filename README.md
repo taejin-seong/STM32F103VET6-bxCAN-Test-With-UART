@@ -190,7 +190,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 <details>
 <summary>📌</summary><br>
 <div markdown="1">
-<img src="https://user-images.githubusercontent.com/70312248/167075541-3000120d-8e70-47e4-9349-d5d5d350f2a8.png" width="1000" height="800"/>
+<img src="https://user-images.githubusercontent.com/70312248/167099347-0c9dc590-54f9-4539-9d74-93169e3d3ed6.png" width="1000" height="800"/>
 <br><br>
 </div>
 </details>
@@ -298,7 +298,7 @@ int main(void)
 * Filter 설정으로 인해 MCU 2에서는 **0x104, 0x10C** ID를 가지는 메세지를 수신하지 않고 **0x100**, **0x108** ID를 가지는 메세지만 수신함.
 <br>
 <p align="center">
-<img src="https://user-images.githubusercontent.com/70312248/167088880-3c5438b0-95bc-45ad-8328-52a8395f441b.png" width="1091" height="650"/>
+<img src="https://user-images.githubusercontent.com/70312248/167098491-ad2481e3-210f-41cf-af49-989299cc617c.png" width="1091" height="650"/>
 </p>
 <br>
 
@@ -306,7 +306,7 @@ int main(void)
 * MCU 1에서는 MCU 2가 가질 수 있는 **0x100, 0x108** ID의 메세지를 모두 수신할 수 있음.
 <br>
 <p align="center">
-<img src="https://user-images.githubusercontent.com/70312248/167089510-093c329d-7ba5-4991-9977-43c6091d8f85.png" width="1091" height="650"/>
+<img src="https://user-images.githubusercontent.com/70312248/167098667-471e7a86-e4cf-40e3-8610-752d15733bda.png" width="1091" height="650"/>
 </p>
 <br>
 
