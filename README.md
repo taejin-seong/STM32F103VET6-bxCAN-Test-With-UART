@@ -234,7 +234,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 
 
 
-#### 4. NVIC
+#### 5. NVIC
 <details>
 <summary>📌</summary><br>  
 <div markdown="1">
