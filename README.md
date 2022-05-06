@@ -287,6 +287,18 @@ int main(void)
 
 
 ## 테스트 결과
+### 터미널창 초기화면
+<br>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/70312248/167086678-22a5996d-9f6b-42c8-9650-b74fcf6a210b.png" width="1091" height="350"/>
+</p>
+<br>
+
+### MCU 1에서 MCU 2로 해당 ID의 데이터를 송신하는 경우
+<br>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/70312248/167087832-bb9ade48-d821-4376-b623-162156ba1c09.png" width="1091" height="700"/>
+</p>
 <br>
 
 ## 참고 <br>
