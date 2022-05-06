@@ -159,7 +159,92 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 
 
 ## STM32CubeMX 설정 
-<br>
+### Clock Configuration
+<details>
+<summary>📌</summary><br> 
+<div markdown="1">
+<img src="https://user-images.githubusercontent.com/70312248/167075208-744c5f4e-107a-4f65-b857-77ed396d149c.png" width="1180" height="900"/> <br>
+<br><br>
+</div>
+</details>
+
+
+<hr/>
+
+### Pinout<br>
+<details>
+<summary>📌</summary><br>  
+<div markdown="1">
+  <p align="center">
+<img src="https://user-images.githubusercontent.com/70312248/167075360-89d10748-1cd1-46fc-88cf-6adc1ca39074.png" width="800" height="700"/> <br>
+  </p>
+<br><br>
+</div>
+</details>
+
+<hr/>
+
+### Peripheral & Core Configuration<br>
+#### 1. UART1
+
+<details>
+<summary>📌</summary><br>
+<div markdown="1">
+<img src="https://user-images.githubusercontent.com/70312248/167075541-3000120d-8e70-47e4-9349-d5d5d350f2a8.png" width="1000" height="800"/>
+<br><br>
+</div>
+</details>
+
+
+#### 2. CAN
+
+<details>
+<summary>📌</summary><br>
+<div markdown="1">
+<img src="https://user-images.githubusercontent.com/70312248/167075640-470c8d53-dbc5-4757-9c44-4adcd4c2a9c9.png" width="1000" height="800"/>
+<br><br>
+</div>
+</details>
+
+
+#### 3. GPIO
+<details>
+<summary>📌</summary><br> 
+• PC6 (LED2), PC7 (LED1)은 개발 보드 내에 연결된 2개의 LED Pin을 의미합니다.  <br><br>
+<div markdown="1">
+<img src="https://user-images.githubusercontent.com/70312248/167075752-7832ea4f-d988-4cb4-a93f-085bde33e589.png" width="1000" height="800"/> 
+<br><br>
+</div>
+</details>
+
+
+
+#### 4. DMA
+<details>
+<summary>📌</summary><br>  
+<div markdown="1">
+  • <b> USART1 DMA Request Setting </b> <br>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;[USART1_RX]&nbsp;:&nbsp;&nbsp;Mode → <b>Circular</b> <br>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;[USART1_TX]&nbsp;:&nbsp;&nbsp;Mode → <b>Normal</b> (All Default) <br>
+  <br><br>
+<img src="https://user-images.githubusercontent.com/70312248/167075922-ff5c1ef2-9166-4bd6-99da-367e46c44f0f.png" width="1000" height="800"/> 
+<br><br>
+</div>
+</details>
+
+
+
+#### 4. NVIC
+<details>
+<summary>📌</summary><br>  
+<div markdown="1">
+<img src="https://user-images.githubusercontent.com/70312248/167076207-b753554a-bc87-472f-9673-01ba80b7d8b3.png" width="1000" height="800"/> 
+<br><br>
+</div>
+</details>
+
+<br><br>
+
 
 ## 테스트 파일
 <br>
