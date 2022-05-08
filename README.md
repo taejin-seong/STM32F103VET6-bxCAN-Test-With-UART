@@ -91,7 +91,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
 
 ### Baud Rate 설정
 * CAN 통신의 Baud Rate를 설정할 때는 **1 bit를 전송하는데 걸리는 시간**을 설정해야함.
-* **Baud Rate = 500kbps** 으로 설정하기 위한 과정 
+* **Baud Rate = 500kbps** 으로 설정하기 위한 과정. 
 
 ### (1). Prescaler 설정
 * Baud Rate는 초당 500k bit이므로 1bit 당 2us가 소요.
