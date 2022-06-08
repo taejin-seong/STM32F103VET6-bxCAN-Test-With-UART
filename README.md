@@ -114,7 +114,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
    + *Sample Point = (SYNC_SEG + BS1) / Total TQ*  
 * 따라서 위의 공식을 이용하면 **75/100 = (1 + BS1) / 8** 이므로 이를 **BS1**에 대하여 풀면 **BS1=5**, 저절로 **BS2=2**
 * 그러므로 **SYNC_SEG = 1**, **BS1 = 5**, **BS = 2**의 TQ를 배정받게 됨.
-* 이와 함께 **STW (Re-Synchroniztion Jump Width)** 는 **1**로 설정
+* 이와 함께 **SJW (Re-Synchroniztion Jump Width)** 는 **1**로 설정
 * 여기까지 TQ 배치에 따른 Sample Point가 결정되고 1 Bit Time이 완성됨.
 
 ### (4). 사이트를 이용하여 쉽게 계산하기
