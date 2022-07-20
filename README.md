@@ -256,7 +256,7 @@ CAN 통신의 이론적 소개와 2bit STM32F0 MCU에서의 CAN 통신을 위한
   + stm32f103vet6_fsmc_can_test → src → ap → ap.c → <b>void apMCU1CanTest(void){...} </b><br>
   + stm32f103vet6_fsmc_can_test → src → ap → ap.c → <b>void apMCU2CanTest(void){...} </b><br>
 
-* `apMCU1CanTest()` 함수와 `apMCU2CanTes()` 함수를 각각 다른 타겟 MCU에 다운로드하여 CAN 통신을 테스트 해볼 수 있습니다.
+* `apMCU1CanTest()` 함수와 `apMCU2CanTest()` 함수를 각각 다른 타겟 MCU에 다운로드하여 CAN 통신을 테스트 해볼 수 있습니다.
 * `ap.c` 함수에서 제공하는 테스트 외에 다양한 테스트 케이스를 응용하여 구현할 수 있습니다.<br>
 
 <br>
