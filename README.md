@@ -315,7 +315,7 @@ int main(void)
 
 ### (4). 0x100 Std ID로 데이터 1을 송신할 때의 CAN 메세지의 Data Frame 파형 측정
 * Data Field는 **8 byte**로 설정됨.
-* 마지막 7 bits는 **Error Frame** 의미.
+* 마지막 7 bits는 **End Frame** 의미.
 <br>
 
 <p align="center">
